@@ -18,7 +18,7 @@ export function LiveStatusBar() {
   }, []);
 
   return (
-    <section className="sticky top-16 z-30 border-y border-turmeric-300/30 bg-ink text-white shadow-lg">
+    <section className="sticky top-0 z-30 border-y border-turmeric-300/30 bg-ink text-white shadow-lg">
       <div className="container flex snap-x gap-4 overflow-x-auto py-3 text-sm font-bold md:items-center md:justify-between md:overflow-visible">
         <div className="flex shrink-0 items-center gap-2">
           <span className={status.isOpen ? "text-emerald-400" : "text-red-400"} aria-hidden>

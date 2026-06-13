@@ -34,10 +34,10 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled || !isHome || open
-          ? "bg-forest-900/98 shadow-[0_2px_24px_rgba(0,0,0,0.4)] backdrop-blur"
-          : "bg-transparent",
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        isHome && !scrolled && !open
+          ? "bg-transparent"
+          : "bg-forest-900/98 shadow-[0_2px_24px_rgba(0,0,0,0.4)] backdrop-blur",
       )}
     >
       <div className="container flex h-16 items-center justify-between gap-4">

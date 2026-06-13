@@ -20,7 +20,7 @@ export function HeroSection({ hasHeroVideo, reviews }: { hasHeroVideo: boolean; 
   const summary = formatHeroReviewSummary(reviews);
 
   return (
-    <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
+    <section className="relative -mt-16 flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
       {/* ── Background ── */}
       <div className="absolute inset-0">
         {hasHeroVideo ? (
