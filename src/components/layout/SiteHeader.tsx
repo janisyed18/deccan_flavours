@@ -24,7 +24,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -36,7 +36,7 @@ export function SiteHeader() {
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         isHome && !scrolled && !open
-          ? "bg-transparent"
+          ? "bg-gradient-to-b from-forest-900/90 via-forest-900/40 to-transparent backdrop-blur-sm"
           : "bg-forest-900/98 shadow-[0_2px_24px_rgba(0,0,0,0.4)] backdrop-blur",
       )}
     >
@@ -47,7 +47,7 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -65,7 +65,7 @@ export function SiteHeader() {
         </nav>
 
         {/* Desktop CTAs */}
-        <div className="hidden shrink-0 items-center gap-2 xl:flex">
+        <div className="hidden shrink-0 items-center gap-2 lg:flex">
           <a
             href={`tel:${RESTAURANT_CONFIG.phone.replace(/\s/g, "")}`}
             title={RESTAURANT_CONFIG.phone}
@@ -89,7 +89,7 @@ export function SiteHeader() {
           aria-label="Toggle navigation"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="grid h-10 w-10 place-items-center rounded-full border border-white/25 text-white xl:hidden"
+          className="grid h-10 w-10 place-items-center rounded-full border border-white/25 text-white lg:hidden"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -97,7 +97,7 @@ export function SiteHeader() {
 
       {/* Mobile drawer */}
       {open && (
-        <div className="border-t border-white/10 bg-forest-900 xl:hidden">
+        <div className="border-t border-white/10 bg-forest-900 lg:hidden">
           <nav className="container grid gap-0.5 py-3">
             <Link href="/" onClick={() => setOpen(false)} className={cn("rounded-xl px-4 py-3 text-sm font-semibold", pathname === "/" ? "bg-white/10 text-turmeric-300" : "text-white/80")}>Home</Link>
             {navLinks.map((link) => (
