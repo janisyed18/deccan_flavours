@@ -23,7 +23,7 @@ export function AppChrome({ children }: { children: ReactNode }) {
       <SkipLink />
       <SiteHeader />
       <AnnouncementBanner />
-      <main id="main-content">{children}</main>
+      <main id="main-content" className="[&>section:first-child]:pt-0">{children}</main>
       <Footer />
       <RestaurantJsonLd />
     </>

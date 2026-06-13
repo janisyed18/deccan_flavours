@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 
 import { DietaryBadge } from "@/components/ui";
 import type { MergedMenuCategory } from "@/lib/menu";
@@ -15,106 +15,120 @@ const allTab = { slug: "all", name: "All" };
 export function MenuPreview({ menuCategories }: { menuCategories: MergedMenuCategory[] }) {
   const tabs = [allTab, ...menuCategories];
   const [active, setActive] = useState("all");
+
   const items = useMemo(() => {
-    if (active === "all") {
-      return menuCategories.flatMap((category) => category.items).slice(0, 12);
-    }
-    return menuCategories.find((category) => category.slug === active)?.items ?? [];
+    if (active === "all") return menuCategories.flatMap((c) => c.items).slice(0, 9);
+    return menuCategories.find((c) => c.slug === active)?.items ?? [];
   }, [active, menuCategories]);
 
   return (
-    <section className="bg-forest-900 py-20 text-white" id="menu-preview">
-      <div className="container">
-        {/* Section heading */}
-        <div className="mb-10">
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-turmeric-300">Explore the Menu</p>
-          <h2 className="font-display text-5xl font-bold leading-none text-white md:text-6xl">
-            Full Menu Preview
-          </h2>
-          <p className="mt-4 max-w-xl text-lg text-white/65">
-            Filter through plates, starters, curries, naans, desserts and drinks before ordering.
+    <section className="bg-ink py-24 text-white" id="menu-preview">
+      {/* ── Header ── */}
+      <div className="container mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="mb-3 text-[11px] font-black uppercase tracking-[0.28em] text-turmeric-300">
+            Explore the Menu
           </p>
+          <h2
+            className="font-display font-bold leading-none text-white"
+            style={{ fontSize: "clamp(2.5rem,6vw,4.5rem)" }}
+          >
+            What's On
+          </h2>
         </div>
+        <Link
+          href="/menu"
+          className="inline-flex items-center gap-2 self-start text-sm font-black text-turmeric-300 transition hover:gap-3 lg:self-auto"
+        >
+          Full menu <ArrowRight className="h-4 w-4" aria-hidden />
+        </Link>
+      </div>
 
-        {/* Category tab bar */}
-        <div className="sticky top-[4.5rem] z-20 -mx-4 mb-8 flex gap-2 overflow-x-auto border-y border-white/10 bg-forest-900/95 px-4 py-3 backdrop-blur md:static md:mx-0 md:border md:border-white/10 md:px-3 md:rounded-xl">
+      {/* ── Category tabs ── */}
+      <div className="container mb-8">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {tabs.map((tab) => (
             <button
               key={tab.slug}
               type="button"
               onClick={() => setActive(tab.slug)}
               className={cn(
-                "shrink-0 rounded-full px-5 py-2 text-sm font-black transition",
+                "shrink-0 rounded-full border px-5 py-2 text-sm font-black transition",
                 active === tab.slug
-                  ? "bg-turmeric-300 text-forest-900"
-                  : "border border-white/20 text-white/70 hover:border-turmeric-300/50 hover:text-white",
+                  ? "border-turmeric-300 bg-turmeric-300 text-forest-900"
+                  : "border-white/15 text-white/60 hover:border-white/40 hover:text-white",
               )}
             >
               {tab.name}
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Menu grid */}
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {items.map((item) => (
+      {/* ── Bento grid ── */}
+      <div className="container grid auto-rows-[220px] grid-cols-2 gap-3 md:auto-rows-[260px] lg:grid-cols-3">
+        {items.map((item, idx) => {
+          // First item in "all" tab gets a double-tall featured slot
+          const featured = active === "all" && idx === 0;
+
+          return (
             <article
               key={item.id}
-              className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] transition hover:bg-white/10"
+              className={cn(
+                "group relative overflow-hidden rounded-2xl border border-white/8 bg-forest-900",
+                featured && "col-span-2 row-span-2 md:col-span-1 md:row-span-2",
+              )}
             >
-              <div className="relative aspect-video overflow-hidden bg-forest-700">
-                <Image
-                  src={item.imageUrl}
-                  alt={item.name}
-                  fill
-                  sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                />
-                {item.popular && (
-                  <span className="absolute left-3 top-3 rounded-full bg-turmeric-300 px-3 py-1 text-xs font-black text-forest-900">
-                    Most Ordered
-                  </span>
-                )}
-                {item.weekendOnly && (
-                  <span className="absolute right-3 top-3 rounded-full bg-forest-900/80 px-3 py-1 text-xs font-black text-white">
-                    Weekend
-                  </span>
-                )}
-              </div>
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-lg font-black leading-tight text-white">{item.name}</h3>
-                  <p className="shrink-0 text-xl font-black text-turmeric-300">{formatCurrency(item.price)}</p>
+              {/* Image */}
+              <Image
+                src={item.imageUrl}
+                alt={item.name}
+                fill
+                sizes="(min-width:1024px) 33vw,(min-width:640px) 50vw,100vw"
+                className="object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-90"
+              />
+
+              {/* Dark overlay — stronger at bottom */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+              {/* Badges */}
+              {item.popular && (
+                <span className="absolute left-3 top-3 rounded-full bg-turmeric-300 px-3 py-1 text-[11px] font-black text-forest-900">
+                  Popular
+                </span>
+              )}
+
+              {/* Content overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {item.dietaryTags.slice(0, 2).map((tag) => (
+                    <DietaryBadge key={tag} tag={tag} />
+                  ))}
                 </div>
-                <p className="mt-2 text-sm leading-6 text-white/60 line-clamp-2">{item.description}</p>
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap gap-1.5">
-                    {item.dietaryTags.map((tag) => (
-                      <DietaryBadge key={tag} tag={tag} />
-                    ))}
+                <div className="flex items-end justify-between gap-2">
+                  <div>
+                    <h3 className={cn("font-black leading-tight text-white", featured ? "text-xl" : "text-base")}>
+                      {item.name}
+                    </h3>
+                    {featured && (
+                      <p className="mt-1 text-sm text-white/60 line-clamp-2">{item.description}</p>
+                    )}
                   </div>
-                  <Link
-                    href={`/order?item=${item.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-turmeric-300 px-4 py-2 text-xs font-black text-forest-900 transition hover:bg-white"
-                  >
-                    <Plus aria-hidden className="h-3.5 w-3.5" />
-                    Add
-                  </Link>
+                  <div className="flex shrink-0 flex-col items-end gap-2">
+                    <span className="text-lg font-black text-turmeric-300">{formatCurrency(item.price)}</span>
+                    <Link
+                      href={`/order?item=${item.id}`}
+                      className="grid h-8 w-8 place-items-center rounded-full bg-turmeric-300 text-forest-900 transition hover:bg-white"
+                      aria-label={`Add ${item.name} to order`}
+                    >
+                      <Plus className="h-4 w-4" aria-hidden />
+                    </Link>
+                  </div>
                 </div>
               </div>
             </article>
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/menu"
-            className="inline-flex min-h-12 items-center gap-2 rounded-full border border-turmeric-300/50 px-8 py-3 text-sm font-black text-turmeric-300 transition hover:bg-turmeric-300 hover:text-forest-900"
-          >
-            View Full Menu
-          </Link>
-        </div>
+          );
+        })}
       </div>
     </section>
   );

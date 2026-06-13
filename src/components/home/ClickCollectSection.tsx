@@ -4,85 +4,92 @@ import Link from "next/link";
 import { ArrowRight, CreditCard, QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
-import { StatusTracker } from "@/components/ui";
 import { RESTAURANT_CONFIG } from "@/config/restaurant";
 
 const steps = [
-  { num: "01", text: "Scan QR or click link" },
-  { num: "02", text: "Select items & pay via Stripe" },
-  { num: "03", text: "Track your order status live" },
-  { num: "04", text: "Pick up when ready — skip the queue" },
+  { num: "01", title: "Scan or click",    desc: "Scan the QR code at our counter or click the Order link" },
+  { num: "02", title: "Build your order", desc: "Pick dishes, choose a pickup time, add any notes" },
+  { num: "03", title: "Pay securely",     desc: "Checkout via Stripe — card, Apple Pay or Google Pay" },
+  { num: "04", title: "Collect & enjoy",  desc: "Get a notification when your order is ready — skip the queue" },
 ];
 
 export function ClickCollectSection() {
   return (
-    <section className="spice-texture py-20 text-white">
-      <div className="container grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
+    <section className="spice-texture grain py-24 text-white">
+      <div className="container grid gap-16 lg:grid-cols-2 lg:items-center">
         {/* Left: steps */}
         <div>
-          <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-turmeric-300">Click & Collect</p>
-          <h2 className="font-display text-5xl font-bold leading-none md:text-6xl">
-            Order Ahead.<br />Skip the Queue.
+          <p className="mb-4 text-[11px] font-black uppercase tracking-[0.28em] text-turmeric-300">
+            Click & Collect
+          </p>
+          <h2
+            className="font-display font-bold leading-none text-white"
+            style={{ fontSize: "clamp(2.5rem,6vw,4rem)" }}
+          >
+            Order Ahead,<br />
+            <span className="text-turmeric-300">Skip the Queue.</span>
           </h2>
-          <p className="mt-5 max-w-lg text-lg leading-8 text-white/72">
-            Scan at the table or order from home, pay online via Stripe, track the order, then collect fresh from the counter.
+          <p className="mt-5 max-w-md text-base text-white/60">
+            Pay online before you arrive and walk straight to the counter for a piping-hot pickup.
           </p>
 
-          {/* Numbered steps with dotted connector */}
-          <div className="mt-10 flex flex-col gap-0">
-            {steps.map((step, index) => (
-              <div key={step.num} className="relative flex gap-6">
-                {/* Dotted vertical line */}
-                {index < steps.length - 1 && (
-                  <div className="absolute left-[2.75rem] top-14 h-[calc(100%-2rem)] w-px border-l-2 border-dashed border-turmeric-300/25" aria-hidden />
-                )}
-                {/* Step number */}
-                <div className="relative shrink-0 pb-10 last:pb-0">
-                  <span
-                    className="block font-black leading-none text-turmeric-300/25 select-none"
-                    style={{ fontSize: "clamp(3rem,6vw,4.5rem)" }}
-                    aria-hidden
-                  >
+          {/* Steps */}
+          <ol className="mt-10 space-y-0">
+            {steps.map((step, idx) => (
+              <li key={step.num} className="flex gap-5">
+                {/* Number + connector */}
+                <div className="flex flex-col items-center">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-turmeric-300/50 text-sm font-black text-turmeric-300">
                     {step.num}
                   </span>
+                  {idx < steps.length - 1 && (
+                    <span className="mt-1 w-px flex-1 border-l border-dashed border-turmeric-300/20" />
+                  )}
                 </div>
-                <div className="flex flex-col justify-center pb-10 last:pb-0">
-                  <p className="text-lg font-black text-white">{step.text}</p>
+                {/* Text */}
+                <div className={`pb-8 ${idx === steps.length - 1 ? "pb-0" : ""}`}>
+                  <h3 className="font-black text-white">{step.title}</h3>
+                  <p className="mt-1 text-sm text-white/55">{step.desc}</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
-
-          <div className="mt-6">
-            <StatusTracker activeIndex={1} />
-          </div>
+          </ol>
         </div>
 
         {/* Right: QR card */}
         <div className="rounded-3xl bg-white p-8 text-ink shadow-2xl">
-          <div className="mb-5 flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em] text-forest-700">
-            <QrCode aria-hidden className="h-4 w-4" />
-            Restaurant QR
+          <div className="flex items-center gap-2 mb-6 text-xs font-black uppercase tracking-[0.2em] text-forest-700">
+            <QrCode className="h-4 w-4" aria-hidden /> Restaurant QR Code
           </div>
-          <div className="flex flex-col items-center gap-6 md:flex-row md:items-start">
-            <div className="shrink-0 rounded-xl border border-black/8 bg-white p-3">
-              <QRCodeSVG value={RESTAURANT_CONFIG.qrCodeValue} size={160} includeMargin aria-label="QR code to order online" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-black text-ink">Scan to start your pickup order</h3>
-              <p className="mt-3 text-sm leading-6 text-charcoal/65">
-                The same link powers counter QR scans and the online click-and-collect checkout.
-              </p>
-              <Link
-                href="/order"
-                className="mt-6 inline-flex min-h-12 items-center gap-2 rounded-full bg-forest-900 px-6 py-3 text-sm font-black text-white transition hover:bg-forest-700"
-              >
-                <CreditCard aria-hidden className="h-4 w-4" />
-                Pay Online
-                <ArrowRight aria-hidden className="h-4 w-4" />
-              </Link>
+
+          <div className="flex justify-center mb-6">
+            <div className="rounded-2xl border border-black/8 bg-smoke p-4">
+              <QRCodeSVG
+                value={RESTAURANT_CONFIG.qrCodeValue}
+                size={180}
+                includeMargin
+                aria-label="QR code to order online at Deccan Flavours"
+              />
             </div>
           </div>
+
+          <h3 className="text-center text-xl font-black text-ink">Scan to start your order</h3>
+          <p className="mt-2 text-center text-sm text-charcoal/60">
+            Works on any smartphone. No app needed.
+          </p>
+
+          <Link
+            href="/order"
+            className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-forest-900 py-4 text-sm font-black text-white transition hover:bg-forest-700"
+          >
+            <CreditCard className="h-4 w-4" aria-hidden />
+            Pay Online Now
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+
+          <p className="mt-3 text-center text-xs text-charcoal/40">
+            Powered by Stripe · Secure checkout
+          </p>
         </div>
       </div>
     </section>

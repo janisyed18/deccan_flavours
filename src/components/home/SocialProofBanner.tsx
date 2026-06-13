@@ -1,63 +1,51 @@
-import { CalendarDays, ShoppingBag } from "lucide-react";
-
+import Link from "next/link";
+import { CalendarDays, Phone, ShoppingBag } from "lucide-react";
 import { RESTAURANT_CONFIG } from "@/config/restaurant";
 
 export function SocialProofBanner() {
   return (
-    <section className="relative overflow-hidden bg-turmeric-300 py-16">
-      {/* Decorative SVG lotus pattern */}
-      <svg
-        aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-10"
-        xmlns="http://www.w3.org/2000/svg"
-        preserveAspectRatio="xMidYMid slice"
-      >
+    <section className="relative overflow-hidden bg-turmeric-300 py-20">
+      {/* Decorative arch pattern */}
+      <svg aria-hidden className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.07]"
+        xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <pattern id="lotus-pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <circle cx="60" cy="60" r="28" fill="none" stroke="#0a2e22" strokeWidth="1.5" />
-            <circle cx="60" cy="60" r="16" fill="none" stroke="#0a2e22" strokeWidth="1" />
-            <circle cx="60" cy="60" r="6" fill="#0a2e22" opacity="0.4" />
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-              <line
-                key={deg}
-                x1="60"
-                y1="60"
-                x2={60 + 28 * Math.cos((deg * Math.PI) / 180)}
-                y2={60 + 28 * Math.sin((deg * Math.PI) / 180)}
-                stroke="#0a2e22"
-                strokeWidth="0.75"
-                opacity="0.5"
-              />
-            ))}
+          <pattern id="arch" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <path d="M50 5 Q80 5 80 40 L80 95 L20 95 L20 40 Q20 5 50 5Z"
+              fill="none" stroke="#0a2e22" strokeWidth="1.5"/>
+            <circle cx="50" cy="35" r="8" fill="none" stroke="#0a2e22" strokeWidth="1"/>
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#lotus-pattern)" />
+        <rect width="100%" height="100%" fill="url(#arch)"/>
       </svg>
 
-      <div className="container relative z-10 flex flex-col items-center text-center">
-        <h2 className="font-display text-5xl font-bold leading-tight text-forest-900 md:text-6xl">
-          Ready to taste the Deccan?
-        </h2>
-        <p className="mt-4 max-w-xl text-lg text-forest-700">
-          {RESTAURANT_CONFIG.tagline}
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <a
-            href={RESTAURANT_CONFIG.orderingLink}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-forest-900 px-7 py-3 text-sm font-black text-white transition hover:bg-forest-700"
+      <div className="container relative z-10">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="mb-4 text-[11px] font-black uppercase tracking-[0.28em] text-forest-700/70">
+            Ready to dine?
+          </p>
+          <h2
+            className="font-display font-bold leading-tight text-forest-900"
+            style={{ fontSize: "clamp(2.5rem,6vw,4rem)" }}
           >
-            <ShoppingBag aria-hidden className="h-4 w-4" />
-            Order Online
-          </a>
-          <a
-            href={RESTAURANT_CONFIG.reservationLink}
-            className="inline-flex min-h-12 items-center gap-2 rounded-full border-2 border-forest-900 px-7 py-3 text-sm font-black text-forest-900 transition hover:bg-forest-900 hover:text-white"
-          >
-            <CalendarDays aria-hidden className="h-4 w-4" />
-            Reserve a Table
-          </a>
+            Taste the Deccan — tonight.
+          </h2>
+          <p className="mt-4 text-lg text-forest-700/80">
+            Dine in, click & collect, or order delivery. Open 7 days.
+          </p>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <a href={RESTAURANT_CONFIG.orderingLink} target="_blank" rel="noreferrer"
+              className="inline-flex h-12 items-center gap-2 rounded-full bg-forest-900 px-8 text-sm font-black text-white transition hover:bg-forest-700 hover:scale-105">
+              <ShoppingBag className="h-4 w-4" aria-hidden/> Order Online
+            </a>
+            <Link href="/reserve"
+              className="inline-flex h-12 items-center gap-2 rounded-full border-2 border-forest-900/40 px-8 text-sm font-black text-forest-900 transition hover:bg-forest-900 hover:text-white">
+              <CalendarDays className="h-4 w-4" aria-hidden/> Reserve a Table
+            </Link>
+            <a href={`tel:${RESTAURANT_CONFIG.phone.replace(/\s/g,"")}`}
+              className="inline-flex h-12 items-center gap-2 rounded-full border-2 border-forest-900/40 px-8 text-sm font-black text-forest-900 transition hover:bg-forest-900 hover:text-white">
+              <Phone className="h-4 w-4" aria-hidden/> {RESTAURANT_CONFIG.phone}
+            </a>
+          </div>
         </div>
       </div>
     </section>
