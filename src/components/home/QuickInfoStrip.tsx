@@ -1,54 +1,63 @@
-import { Clock, MapPin, Phone, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, Clock, MapPin, Phone, ShoppingBag } from "lucide-react";
 
 import { RESTAURANT_CONFIG } from "@/config/restaurant";
 import { formatTime } from "@/lib/hours";
 
 const tiles = [
   {
-    label: "Phone",
+    label: "Call Us",
     value: RESTAURANT_CONFIG.phone,
+    sub: "Reservations & enquiries",
     href: `tel:${RESTAURANT_CONFIG.phone.replace(/\s/g, "")}`,
     icon: Phone,
+    external: false,
   },
   {
-    label: "Address",
-    value: "Unit 4/80 Station St",
-    href: RESTAURANT_CONFIG.googleMapsLink,
-    icon: MapPin,
-  },
-  {
-    label: "Hours",
-    value: `${formatTime(RESTAURANT_CONFIG.hours.monday.open)} daily`,
+    label: "Today's Hours",
+    value: `${formatTime(RESTAURANT_CONFIG.hours.monday.open)} – ${formatTime(RESTAURANT_CONFIG.hours.monday.close)}`,
+    sub: "Mon–Thu · Fri–Sun vary",
     href: "/contact",
     icon: Clock,
+    external: false,
+  },
+  {
+    label: "Find Us",
+    value: "80 Station St",
+    sub: "Wentworthville NSW",
+    href: RESTAURANT_CONFIG.googleMapsLink,
+    icon: MapPin,
+    external: true,
   },
   {
     label: "Order Online",
-    value: "Delivery & pickup",
+    value: "UberEats · DoorDash",
+    sub: "Delivery & pickup",
     href: RESTAURANT_CONFIG.orderingLink,
     icon: ShoppingBag,
+    external: true,
   },
 ];
 
 export function QuickInfoStrip() {
   return (
     <section className="border-b border-black/8 bg-white">
-      <div className="container flex snap-x gap-4 overflow-x-auto py-6 md:grid md:grid-cols-4 md:overflow-visible">
+      <div className="container grid grid-cols-1 gap-0 divide-y divide-black/8 md:grid-cols-4 md:divide-x md:divide-y-0">
         {tiles.map((tile) => (
           <a
             key={tile.label}
             href={tile.href}
-            target={tile.href.startsWith("http") ? "_blank" : undefined}
-            rel={tile.href.startsWith("http") ? "noreferrer" : undefined}
-            className="flex min-w-[220px] snap-start items-center gap-4 rounded border border-black/8 bg-smoke/60 p-4 transition hover:-translate-y-0.5 hover:border-turmeric-300 hover:bg-white"
+            target={tile.external ? "_blank" : undefined}
+            rel={tile.external ? "noreferrer" : undefined}
+            className="group flex items-start gap-0 border-l-4 border-transparent pl-5 py-6 pr-4 transition hover:border-turmeric-300 hover:bg-turmeric-100/30"
           >
-            <span className="grid h-11 w-11 place-items-center rounded bg-forest-900 text-turmeric-300">
-              <tile.icon aria-hidden className="h-5 w-5" />
-            </span>
-            <span>
-              <span className="block text-xs font-black uppercase tracking-[0.2em] text-forest-700">{tile.label}</span>
-              <span className="mt-1 block text-sm font-bold text-ink">{tile.value}</span>
-            </span>
+            <div className="flex-1">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-charcoal/50">{tile.label}</p>
+              <p className="mt-1 text-2xl font-black text-forest-900 leading-tight">{tile.value}</p>
+              <p className="mt-0.5 text-sm text-charcoal/60">{tile.sub}</p>
+            </div>
+            {tile.external && (
+              <ArrowUpRight aria-hidden className="mt-1 h-4 w-4 shrink-0 text-charcoal/30 transition group-hover:text-turmeric-500" />
+            )}
           </a>
         ))}
       </div>
